@@ -27,14 +27,23 @@ int main() {
     std::vector<std::string>  vec;
     int result = 0;
 
-    std::regex regexp("mul\\(([0-9]+),([0-9]+)\\)");
+
+    std::regex regexp("do\\(\\)|don't\\(\\)|mul\\(([0-9]+),([0-9]+)\\)");
 
     std::smatch matches;
     std::string::const_iterator searchStart(input.cbegin());
+    bool isEnabled = true;
 
     while (std::regex_search(searchStart, input.cend(), matches, regexp)) {
-        result +=  std::stoi(matches[1]) * std::stoi(matches[2]);
-
+        if (isEnabled and matches[1] != "" ) {
+            result +=  std::stoi(matches[1]) * std::stoi(matches[2]);
+        }
+        if (matches[0] == "do()"){
+            isEnabled= true;
+        }
+        if (matches[0] == "don't()"){
+            isEnabled= false;
+        }
         searchStart = matches.suffix().first;
     }
 
